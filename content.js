@@ -21,10 +21,12 @@ function hashCode(str) {
     return hash;
 }
 
-// Function to apply colors to 'channel-text' elements based on their text content
+// Function to apply colors to the last 10 'channel-text' elements based on their text content
 function applyColors() {
     const channelTextElements = document.querySelectorAll('.channel-text');
-    channelTextElements.forEach(element => {
+    const lastTenElements = Array.from(channelTextElements).slice(-10);
+
+    lastTenElements.forEach(element => {
         const text = element.textContent.trim();
         const colorIndex = Math.abs(hashCode(text)) % colorSet.length;
         const color = colorSet[colorIndex];
@@ -38,20 +40,30 @@ applyColors();
 
 // Create a MutationObserver to watch for new 'channel-text' elements
 const observer = new MutationObserver(mutations => {
+    let newElements = [];
+
     mutations.forEach(mutation => {
         if (mutation.type === 'childList') {
             const addedNodes = mutation.addedNodes;
             addedNodes.forEach(node => {
                 if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('channel-text')) {
-                    const text = node.textContent.trim();
-                    const colorIndex = Math.abs(hashCode(text)) % colorSet.length;
-                    const color = colorSet[colorIndex];
-                    node.setAttribute('color', '');
-                    node.style.setProperty('color', color, 'important');
+                    newElements.push(node);
                 }
             });
         }
     });
+
+    if (newElements.length > 0) {
+        const lastTenElements = newElements.slice(-10);
+
+        lastTenElements.forEach(element => {
+            const text = element.textContent.trim();
+            const colorIndex = Math.abs(hashCode(text)) % colorSet.length;
+            const color = colorSet[colorIndex];
+            element.setAttribute('color', '');
+            element.style.setProperty('color', color, 'important');
+        });
+    }
 });
 
 // Configure the observer to watch for changes in the chat container
