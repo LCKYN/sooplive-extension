@@ -32,6 +32,13 @@ function applyColors() {
         const color = colorSet[colorIndex];
         element.setAttribute('color', '');
         element.style.setProperty('color', color, 'important');
+
+        // Check for emoticons within the 'channel-text' element
+        const emoticonElements = element.querySelectorAll('.emoticon');
+        emoticonElements.forEach(emoticon => {
+            emoticon.style.setProperty('width', '3.5rem', 'important');
+            emoticon.style.setProperty('height', '3.5rem', 'important');
+        });
     });
 }
 

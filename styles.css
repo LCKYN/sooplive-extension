@@ -2,7 +2,6 @@
     border-radius: 0 !important;
 }
 
-
 .dsvDKK {
     padding: 0px 0rem 1rem !important;
     gap: 0.5rem !important;
@@ -13,4 +12,33 @@
     max-height: none !important;
     width: 100% !important;
     height: auto !important;
+}
+
+#header {
+    background: #0e0e10 !important;
+}
+
+main .main-container {
+    background: #0e0e10 !important;
+}
+
+.sc-9f2fab18-10 {
+    background: #0d0d12 !important;
+
+}
+
+.sc-9f2fab18-7 {
+    background: #0d0d12 !important;
+}
+
+.chat-group {
+    background: #0d0d12 !important;
+}
+
+.sc-6456a53e-2 {
+    background: #0d0d12 !important;
+}
+
+.sc-7ceadb57-0 {
+    background: #0d0d12 !important;
 }
