@@ -85,3 +85,9 @@ if (chatContainer) {
 
 // Run the color application every second
 setInterval(applyColors, 500);
+
+const link = document.createElement("link");
+link.href = chrome.runtime.getURL("styles.css");
+link.type = "text/css";
+link.rel = "stylesheet";
+document.head.appendChild(link);

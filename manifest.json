@@ -1,21 +1,29 @@
 {
-    "manifest_version": 2,
-    "name": "Custom CSS Extension",
+    "manifest_version": 3,
+    "name": "Override CSS",
     "version": "1.0",
-    "description": "Applies custom CSS to specific websites.",
+    "description": "Override specific CSS styles on a webpage",
     "permissions": [
         "activeTab"
     ],
     "content_scripts": [
         {
             "matches": [
-                "https://www.sooplive.com/*"
-            ],
-            "css": [
-                "styles.css"
+                "<all_urls>"
             ],
             "js": [
                 "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "styles.css"
+            ],
+            "matches": [
+                "<all_urls>"
             ]
         }
     ]
