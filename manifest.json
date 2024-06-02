@@ -23,7 +23,7 @@
                 "styles.css"
             ],
             "matches": [
-                "<all_urls>"
+                "https://www.sooplive.com/*"
             ]
         }
     ]
