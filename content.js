@@ -21,16 +21,12 @@ function hashCode(str) {
     return hash;
 }
 
-// Function to apply colors to the last 10 'channel-text' elements based on their text content
-function applyColors() {
-    const channelTextElements = document.querySelectorAll('.channel-text');
-    const lastTenElements = Array.from(channelTextElements).slice(-10);
-
-    lastTenElements.forEach(element => {
+// Function to apply styles to 'channel-text' elements and their emoticons
+function applyStyles(elements) {
+    elements.forEach(element => {
         const text = element.textContent.trim();
         const colorIndex = Math.abs(hashCode(text)) % colorSet.length;
         const color = colorSet[colorIndex];
-        element.setAttribute('color', '');
         element.style.setProperty('color', color, 'important');
 
         // Check for emoticons within the 'channel-text' element
@@ -42,35 +38,43 @@ function applyColors() {
     });
 }
 
-// Apply colors to existing 'channel-text' elements
-applyColors();
+// Function to apply styles to only emoticon elements
+function applyEmoticonStyles(elements) {
+    elements.forEach(emoticon => {
+        emoticon.style.setProperty('width', '3.5rem', 'important');
+        emoticon.style.setProperty('height', '3.5rem', 'important');
+    });
+}
 
-// Create a MutationObserver to watch for new 'channel-text' elements
+// Initial application of styles to existing 'channel-text' elements and .emoticon elements
+const initialChannelTextElements = document.querySelectorAll('.channel-text');
+applyStyles(Array.from(initialChannelTextElements));
+
+const initialEmoticonElements = document.querySelectorAll('.emoticon');
+applyEmoticonStyles(Array.from(initialEmoticonElements));
+
+// Create a MutationObserver to watch for new elements
 const observer = new MutationObserver(mutations => {
-    let newElements = [];
-
     mutations.forEach(mutation => {
         if (mutation.type === 'childList') {
-            const addedNodes = mutation.addedNodes;
-            addedNodes.forEach(node => {
-                if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('channel-text')) {
-                    newElements.push(node);
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const channelTextElements = node.querySelectorAll('.channel-text');
+                    const emoticonElements = node.querySelectorAll('.emoticon');
+
+                    if (node.classList && node.classList.contains('channel-text')) {
+                        applyStyles([node]);
+                    }
+                    if (channelTextElements.length > 0) {
+                        applyStyles(Array.from(channelTextElements));
+                    }
+                    if (emoticonElements.length > 0) {
+                        applyEmoticonStyles(Array.from(emoticonElements));
+                    }
                 }
             });
         }
     });
-
-    if (newElements.length > 0) {
-        const lastTenElements = newElements.slice(-10);
-
-        lastTenElements.forEach(element => {
-            const text = element.textContent.trim();
-            const colorIndex = Math.abs(hashCode(text)) % colorSet.length;
-            const color = colorSet[colorIndex];
-            element.setAttribute('color', '');
-            element.style.setProperty('color', color, 'important');
-        });
-    }
 });
 
 // Configure the observer to watch for changes in the chat container
@@ -83,11 +87,24 @@ if (chatContainer) {
     console.error('Chat container element not found. Please check the selector.');
 }
 
-// Run the color application every second
-setInterval(applyColors, 500);
+// Efficiently run the style application using requestAnimationFrame
+function scheduleApplyStyles() {
+    requestAnimationFrame(() => {
+        applyStyles(Array.from(document.querySelectorAll('.channel-text')).slice(-10));
+        const emoticonElements = document.querySelectorAll('.emoticon');
+        applyEmoticonStyles(Array.from(emoticonElements));
+        scheduleApplyStyles();
+    });
+}
+
+scheduleApplyStyles();
+
 
 const link = document.createElement("link");
 link.href = chrome.runtime.getURL("styles.css");
 link.type = "text/css";
 link.rel = "stylesheet";
-document.head.appendChild(link);
+
+// Insert the link element at the end of the head
+const head = document.getElementsByTagName("head")[0];
+head.appendChild(link);
