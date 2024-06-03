@@ -108,3 +108,51 @@ link.rel = "stylesheet";
 // Insert the link element at the end of the head
 const head = document.getElementsByTagName("head")[0];
 head.appendChild(link);
+
+// ====================================================================================================
+
+
+// Function to update the header color
+function updateHeaderColor(headerColor) {
+    const header = document.querySelector('#header');
+    if (header) {
+        header.style.setProperty('background', headerColor, 'important');
+    }
+}
+
+// Function to update the chat background color
+function updateChatColor(chatColor) {
+    const chat = document.querySelector('.sc-7ceadb57-0');
+    if (chat) {
+        chat.style.setProperty('background', chatColor, 'important');
+    }
+}
+
+// Listen for messages from the popup script
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === 'updateColors') {
+        updateHeaderColor(request.headerColor);
+        updateChatColor(request.chatColor);
+    }
+});
+
+// Load settings from storage and apply styles
+chrome.storage.sync.get(['headerColor', 'chatColor'], function (data) {
+
+    const link = document.createElement("link");
+    link.href = chrome.runtime.getURL("styles.css");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+
+    // Insert the link element at the end of the head
+    const head = document.getElementsByTagName("head")[0];
+    head.appendChild(link);
+
+    console.log('Loaded settings:', data);
+
+    const headerColor = data.headerColor || "#0e0e10"; // Default color if not set
+    const chatColor = data.chatColor || "#0d0d12"; // Default color if not set
+    updateHeaderColor(headerColor);
+    updateChatColor(chatColor);
+
+});

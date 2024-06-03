@@ -88,9 +88,13 @@ main .main-container {
 
 .sc-7ceadb57-0 {
     background: #0d0d12 !important;
-    /* padding-left: 3.5rem !important; */
 }
 
 .kkOyLd {
     padding-left: 8rem;
+}
+
+#header {
+    background: #0e0e10 !important;
+    /* Default color */
 }

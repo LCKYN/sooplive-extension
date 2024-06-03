@@ -4,7 +4,8 @@
     "version": "1.0",
     "description": "Override specific CSS styles on a webpage",
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
     "content_scripts": [
         {
@@ -26,5 +27,13 @@
                 "https://www.sooplive.com/*"
             ]
         }
-    ]
+    ],
+    "action": {
+        "default_popup": "popup.html"
+        // "default_icon": {
+        //     "16": "icon-16.png",
+        //     "48": "icon-48.png",
+        //     "128": "icon-128.png"
+        // }
+    }
 }
